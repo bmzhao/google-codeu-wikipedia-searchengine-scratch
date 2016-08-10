@@ -43,7 +43,7 @@ public class LinkIncrementerThread extends Thread{
     }
 
     private boolean alreadyIndexed(String URL) throws SQLException {
-        this.existsPrep.setString(1, URL.toString());
+        this.existsPrep.setString(1, URL);
         ResultSet resultSet = this.existsPrep.executeQuery();
         if (resultSet.next()) {
             int count = resultSet.getInt(1);
