@@ -14,6 +14,8 @@ public interface Indexable {
 
     public List<String> getTopWords();
 
+    public String getSummary();
+
     public String getTitle();
 
     public int getNumIncomingLinks();

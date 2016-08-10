@@ -1,7 +1,7 @@
 package tasks;
 
 import models.Constants;
-import models.CustomDoc;
+import models.DocumentAndURL;
 import models.Fetch;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -24,7 +24,7 @@ import java.util.concurrent.BlockingQueue;
 public class FetcherThread extends Thread {
     private BlockingQueue<Fetch> fetchQueue;
     private BlockingQueue<Fetch> linkIndexingQueue;
-    private BlockingQueue<CustomDoc> parseQueue;
+    private BlockingQueue<DocumentAndURL> parseQueue;
     private java.sql.Connection connection;
 
     // TODO: 8/9/16 refactor hardcoded column name
@@ -35,7 +35,7 @@ public class FetcherThread extends Thread {
     private PreparedStatement existsPrep;
 
     public FetcherThread(BlockingQueue<Fetch> fetchQueue,
-                         BlockingQueue<CustomDoc> parseQueue,
+                         BlockingQueue<DocumentAndURL> parseQueue,
                          BlockingQueue<Fetch> linkIndexingQueue,
                          java.sql.Connection connection) {
         this.fetchQueue = fetchQueue;
@@ -81,7 +81,7 @@ public class FetcherThread extends Thread {
                 } else {
                     Connection conn = Jsoup.connect(targetURL.toString());
                     Document document = conn.get();
-                    parseQueue.put(new CustomDoc(toFetch.getTargetURL(),document));
+                    parseQueue.put(new DocumentAndURL(toFetch.getTargetURL(),document));
                     /**
                      * if sourceURL exists, then index the link
                      */

@@ -7,11 +7,11 @@ import java.net.URL;
 /**
  * Created by brianzhao on 8/8/16.
  */
-public class CustomDoc {
+public class DocumentAndURL {
     private final URL sourceURL;
     private final Document document;
 
-    public CustomDoc(URL sourceURL, Document document) {
+    public DocumentAndURL(URL sourceURL, Document document) {
         this.sourceURL = sourceURL;
         this.document = document;
     }

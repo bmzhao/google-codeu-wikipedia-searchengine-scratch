@@ -15,6 +15,14 @@ public class Constants {
     public static final int INDEX_QUEUE_LIMIT = 1000;
     public static final int LINK_INCREMENT_QUEUE_LIMIT = 10000;
 
+    public static final int NUM_FETCH_WORKERS = 2;
+    public static final int NUM_PARSE_WORKERS = 2;
+    public static final int LINK_INDEX_WORKERS = 1;
+    public static final int LINK_INCREMENT_QUEUE_WORKERS = 1;
+    public static final int INDEX_QUEUE_WORKERS = 1;
+
+
+
     public static final String DATABASE_NAME = "Crawl";
 
     public static final Map<String, Map<String, String>> TABLE_TO_COLUMNS = new HashMap<>();
@@ -29,6 +37,7 @@ public class Constants {
         INDEX_TYPE_MAP.put("TopWords", "MEDIUMTEXT");
         INDEX_TYPE_MAP.put("NumInlinks", "INT NOT NULL");
         INDEX_TYPE_MAP.put("Vector", "MEDIUMTEXT NOT NULL");
+        INDEX_TYPE_MAP.put("Summary", "MEDIUMTEXT");
 
         Map<String, String> LINKS_TYPE_MAP = new HashMap<>();
         LINKS_TYPE_MAP.put("SourceURL", "VARCHAR(255) NOT NULL");

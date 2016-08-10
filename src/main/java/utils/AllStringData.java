@@ -42,6 +42,10 @@ public class AllStringData {
         return stringDataHashMap.get(inputString).getUnstemmedWord();
     }
 
+    public int size() {
+        return stringDataHashMap.size();
+    }
+
 
     public void updateDF(String inputString, double df) {
         if (!containsString(inputString)) {

@@ -20,9 +20,9 @@ public class IndexerThread extends Thread {
     // TODO: 8/10/16 refactor out hardcoded column names
     private String insertIndexQuery =
             "INSERT INTO " + Constants.DATABASE_NAME + "." + Constants.INDEX_TABLE_NAME +
-                    " ( Url, Title, TopWords, NumInlinks, Vector)\n" +
+                    " ( Url, Title, TopWords, NumInlinks, Vector, Summary)\n" +
                     "VALUES\n" +
-                    "( ?, ?, ?, ?, ? );";
+                    "( ?, ?, ?, ?, ?, ? );";
 
     private PreparedStatement insertPrep;
 
@@ -59,6 +59,13 @@ public class IndexerThread extends Thread {
         insertPrep.setInt(4, 0);
 
         insertPrep.setString(5, indexable.getVector());
+
+        if (indexable.getSummary() != null) {
+            insertPrep.setString(6, indexable.getSummary());
+        } else {
+            insertPrep.setNull(6, Types.VARCHAR);
+        }
+
         int rowsAffected = insertPrep.executeUpdate();
         if (rowsAffected != 1) {
             throw new RuntimeException(String.format("Expected to update 1 row in crawl index table," +
