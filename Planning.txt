@@ -1,0 +1,73 @@
+Architecture
+
+
+   _New_Links__
+   |          |
+   \/         |
+Fetcher -> Parser -> Indexer
+    |
+    |
+    \/
+    Link Indexer
+
+
+Fetcher Responsibilities:
+    Given a "Fetch" object, check if it has been fetched before (query indexing table)
+    if Yes,
+        Send Fetch object to Link Indexer
+    else
+        download all of the html content from the target URL, and send it along to the parser
+        if sourceURL is exists (i.e. it wasn't an initial seed url)
+            send fetch object to Link Indexer
+
+Link Indexer:
+    Given a "Fetch" object, check source URL + targetURL combo already exists in Link db (maybe primary key?)
+    if not
+        add new entry into LinkDB
+        lookup associated targetURL in Indexing Table
+            if doesn't exist,
+                (spinwait) - case where parser hasn't parsed the new link and/or indexer hasn't indexed link
+            //now it exists in indexing table
+            increment incoming link count
+
+    Table Schema:
+       Source URL (String)  Target URL (String)    anchor Text(String)
+
+
+Parser:
+    Contains Global HashMap mapping Word to Index (in high dimensional word vector)
+    Contains Global HashMap mapping Word to NumDocuments it occurs in (for idf)
+    Takes incoming HTML Document With Source URL and:
+        parses the Title
+            adds to Pojo
+        parses the Paragraph Text
+            lowercase, filter stopwords, apply porter stemmer
+            create empty sparse tf vector (doc_hashmap)
+            iterate through words
+                word = current word
+                check if exists in unique word hashmap
+                if not, add entry
+
+                lookup the index for word (from global hashmap)
+                if exists in (doc_hashmap)
+                    increment count
+                else
+                    increment count for global idf counter hashmap
+                    add word + count to doc_hashmap
+        parses any <a> tags
+            check if tag starts with "/wiki", and if it does, sends to FetcherQueue
+
+        set POJO's numIncomingLinks to 0
+        set POJO's list of top tf words and top idf words
+        serialize result, send to indexing queue
+
+
+Indexer:
+    takes Indexable Object until accumulates into list of size 100
+    bulk insert into index table
+
+
+Search Engine:
+    Convert query into sparse vector
+    First Query rows based on if term appears in title or top 100 words
+    Then rank rows by title^3, and sparse vector cosine similarity
