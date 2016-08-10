@@ -75,4 +75,4 @@ Indexer:
 Search Engine:
     Convert query into sparse vector
     First Query rows based on if term appears in title or top 100 words
-    Then rank rows by title^3, and sparse vector cosine similarity
+    Then rank rows by title^3, incoming links, and sparse vector cosine similarity

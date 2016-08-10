@@ -67,6 +67,7 @@ public class IndexerThread extends Thread {
 
     }
 
+    // TODO: 8/10/16 should have indexer bulk insert 100 at a time instead of on each item in queue
     @Override
     public void run() {
         while (true) {

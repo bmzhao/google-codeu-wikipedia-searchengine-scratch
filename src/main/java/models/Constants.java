@@ -53,6 +53,7 @@ public class Constants {
 
     public static List<String> createTableStatements = new ArrayList<>();
 
+    // TODO: 8/10/16 maybe add index on text column of crawlindex
     static {
         for (String tableName : TABLE_TO_COLUMNS.keySet()) {
             if (tableName.equals(LINK_TABLE_NAME)) {

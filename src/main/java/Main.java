@@ -7,6 +7,8 @@ import java.sql.*;
  */
 
 // TODO: 8/9/16 Refactor JDBC Connection object use to: https://stackoverflow.com/questions/1531073/is-java-sql-connection-thread-safe
+// TODO: 8/10/16 Probably update many usages of integer to long to scale to high crawl sizes
+// TODO: 8/10/16 Would like to persist queue state in more db tables in case of crash/interrupt ?
 // should yield greater performance
 
 public class Main {
