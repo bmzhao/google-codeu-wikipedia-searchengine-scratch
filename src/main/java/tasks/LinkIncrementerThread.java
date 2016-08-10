@@ -76,7 +76,9 @@ public class LinkIncrementerThread extends Thread{
         while (true) {
             try {
                 URL toLinkIncrement = linkIncrementerQueue.take();
+                System.out.println("LinkIncrementer got an object");
                 incrementIncomingLinks(toLinkIncrement);
+                System.out.println("LinkIncrementer incremented a field");
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 break;

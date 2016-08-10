@@ -21,12 +21,12 @@ public class WikiDoc implements Indexable {
     private static Gson gson = new Gson();
 
 
-    public WikiDoc(Map<String, Integer> termFreq, URL url, String firstPara, String title) {
+    public WikiDoc(Map<String, Integer> termFreq, URL url, String firstPara, String title, List<String> allWords) {
         this.termFreq = termFreq;
         this.url = url;
         this.firstPara = firstPara;
         this.title = title;
-        this.allWords = new ArrayList<>(termFreq.keySet());
+        this.allWords = allWords;
     }
 
     //todo serialize the hashmap using gson

@@ -80,8 +80,9 @@ public class IndexerThread extends Thread {
         while (true) {
             try {
                 Indexable indexable = indexQueue.take();
+                System.out.println("Indexer received indexable object");
                 addToCrawlIndex(indexable);
-
+                System.out.println("Indexer wrote object to db");
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 break;

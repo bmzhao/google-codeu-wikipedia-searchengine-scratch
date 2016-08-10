@@ -42,7 +42,6 @@ public class Main {
             for (String createStatement : Constants.createTableStatements) {
                 Statement st = conn.createStatement();
                 boolean result = st.execute(createStatement);
-                System.out.println(createStatement);
                 if (result) {
                     throw new RuntimeException("Create statement should have no return value");
                 }

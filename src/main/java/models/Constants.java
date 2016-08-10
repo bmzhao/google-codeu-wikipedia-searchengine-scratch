@@ -15,11 +15,11 @@ public class Constants {
     public static final int INDEX_QUEUE_LIMIT = 1000;
     public static final int LINK_INCREMENT_QUEUE_LIMIT = 10000;
 
-    public static final int NUM_FETCH_WORKERS = 2;
+    public static final int NUM_FETCH_WORKERS = 1;
     public static final int NUM_PARSE_WORKERS = 2;
     public static final int LINK_INDEX_WORKERS = 1;
     public static final int LINK_INCREMENT_QUEUE_WORKERS = 1;
-    public static final int INDEX_QUEUE_WORKERS = 1;
+    public static final int INDEX_QUEUE_WORKERS = 2;
 
 
 

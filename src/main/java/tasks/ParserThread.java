@@ -15,10 +15,7 @@ import utils.Stopwords;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -27,10 +24,10 @@ import java.util.concurrent.BlockingQueue;
 
 // TODO: 8/10/16 get anchortext eventually, now its always just null
 public class ParserThread extends Thread{
-    private AllStringData allStringData;
+    private AllStringData allStringData = new AllStringData();
     private int totalDocs = 0;
     private Stopwords stopwords = new Stopwords();
-    private String urlBase = "https://en.wikipedia.org/";
+    private String urlBase = "https://en.wikipedia.org";
 
     private BlockingQueue<Fetch> fetchQueue;
     private BlockingQueue<DocumentAndURL> parseQueue;
@@ -67,6 +64,10 @@ public class ParserThread extends Thread{
         for (Element link : links) {
             if (link.hasAttr("href")) {
                 String linkString = link.attr("href");
+                int indexOfHash = linkString.indexOf("#");
+                if (indexOfHash != -1) {
+                    linkString = linkString.substring(0, indexOfHash);
+                }
                 if (shouldAddToQueue(linkString)) {
                     try {
                         URL url = new URL(urlBase + linkString);
@@ -110,13 +111,19 @@ public class ParserThread extends Thread{
                 URL sourceURL = documentAndURL.getSourceURL();
                 Document toParse = documentAndURL.getDocument();
 
+                System.out.println("Parser attempting to parse: " + sourceURL.toString());
+
                 String title = toParse.title();
                 String content = getContent(toParse);
                 String firstParagraph = getFirstParagraph(toParse);
 
-                Map<String, Integer> currentDocTF = parseContent(content);
+                String[] words = content.toLowerCase().replaceAll("[^\\w ]", "").split("\\s+");
+
+                Map<String, Integer> currentDocTF = parseContent(words);
+                List<String> allWords = Arrays.asList(words);
+
                 WikiDoc wikiDoc = new WikiDoc(currentDocTF,
-                        sourceURL, firstParagraph, title);
+                        sourceURL, firstParagraph, title, allWords);
 
                 List<URL> links = getLinks(toParse);
                 for (URL url : links) {
@@ -125,6 +132,8 @@ public class ParserThread extends Thread{
                 }
                 totalDocs++;
 
+                System.out.println("Parsed " + totalDocs + " docs");
+                indexingQueue.put(wikiDoc);
                 // TODO: 8/10/16 store state of hashmap + total docs parsed in database
 
             } catch (InterruptedException e) {
@@ -144,8 +153,7 @@ public class ParserThread extends Thread{
 
     }
 
-    private Map<String,Integer> parseContent(String content) {
-        String[] words = content.toLowerCase().replaceAll("[^\\w ]", "").split("\\s+");
+    private Map<String,Integer> parseContent(String[] words) {
         Map<String, Integer> localTf = new HashMap<>();
         for (String currentWord : words) {
             //skip the word if it is a stopword

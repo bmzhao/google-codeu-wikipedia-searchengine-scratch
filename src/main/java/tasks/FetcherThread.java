@@ -30,7 +30,7 @@ public class FetcherThread extends Thread {
     // TODO: 8/9/16 refactor hardcoded column name
     private String existsInCrawlIndexQuery =
             "SELECT COUNT(*) FROM " + Constants.DATABASE_NAME + "." + Constants.INDEX_TABLE_NAME +
-                    " WHERE 'Url' = ?";
+                    " WHERE 'Url' LIKE ?";
 
     private PreparedStatement existsPrep;
 
@@ -51,13 +51,13 @@ public class FetcherThread extends Thread {
     }
 
     private boolean alreadyIndexed(String URL) throws SQLException {
-        this.existsPrep.setString(1, URL.toString());
+        this.existsPrep.setString(1, URL);
         ResultSet resultSet = this.existsPrep.executeQuery();
-        if (resultSet.next()) {
-            int count = resultSet.getInt(1);
-            return count > 0;
+        int count = 0;
+        while (resultSet.next()) {
+            count = resultSet.getInt(1);
         }
-        return false;
+        return count > 0;
     }
 
     @Override
@@ -72,20 +72,25 @@ public class FetcherThread extends Thread {
                 String anchorText = toFetch.getAnchorText();
                 URL targetURL = toFetch.getTargetURL();
 
+                System.out.println("Fetcher sees: " + targetURL.toString());
+
                 /**
                  * if already indexed, send the link on to link indexer
                  */
                 if (alreadyIndexed(targetURL.toString())) {
                     linkIndexingQueue.put(toFetch);
+                    System.out.println("URL already indexed...Fetcher skipping");
                     continue;
                 } else {
                     Connection conn = Jsoup.connect(targetURL.toString());
                     Document document = conn.get();
+                    System.out.println("Fetcher added doc to parseQueue");
                     parseQueue.put(new DocumentAndURL(toFetch.getTargetURL(),document));
                     /**
                      * if sourceURL exists, then index the link
                      */
                     if (sourceURL != null) {
+                        System.out.println("Fetcher added doc to linkIndexingQueue");
                         linkIndexingQueue.put(toFetch);
                     }
                 }

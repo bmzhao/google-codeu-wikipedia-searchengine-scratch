@@ -84,8 +84,10 @@ public class LinkIndexerThread extends Thread {
                  * all fetch objects are guaranteed to have nonNull sourceURL and targetURL
                  */
                 Fetch toLinkIndex = linkIndexQueue.take();
+                System.out.println("LinkIndexer received an object");
                 if (!existsInLinkDB(toLinkIndex)) {
                     insertIntoLinkDB(toLinkIndex);
+                    System.out.println("LinkIndexer wrote object to linkdb");
                     linkIncrementerQueue.put(toLinkIndex.getTargetURL());
                 }
             } catch (InterruptedException e) {
