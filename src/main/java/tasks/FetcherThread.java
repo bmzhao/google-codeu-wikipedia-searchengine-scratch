@@ -30,7 +30,7 @@ public class FetcherThread extends Thread {
     // TODO: 8/9/16 refactor hardcoded column name
     private String existsInCrawlIndexQuery =
             "SELECT COUNT(*) FROM " + Constants.DATABASE_NAME + "." + Constants.INDEX_TABLE_NAME +
-                    " WHERE 'Url' LIKE ?";
+                    " WHERE Url = ?";
 
     private PreparedStatement existsPrep;
 
@@ -78,8 +78,10 @@ public class FetcherThread extends Thread {
                  * if already indexed, send the link on to link indexer
                  */
                 if (alreadyIndexed(targetURL.toString())) {
-                    linkIndexingQueue.put(toFetch);
                     System.out.println("URL already indexed...Fetcher skipping");
+                    if (sourceURL != null) {
+                        linkIndexingQueue.put(toFetch);
+                    }
                     continue;
                 } else {
                     Connection conn = Jsoup.connect(targetURL.toString());

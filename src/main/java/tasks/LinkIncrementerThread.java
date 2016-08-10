@@ -19,14 +19,14 @@ public class LinkIncrementerThread extends Thread{
     // TODO: 8/9/16 refactor hardcoded column name, also duplicated in fetcherthread
     private String existsInCrawlIndexQuery =
             "SELECT COUNT(*) FROM " + Constants.DATABASE_NAME + "." + Constants.INDEX_TABLE_NAME +
-                    " WHERE 'Url' = ?";
+                    " WHERE Url = ?";
     private PreparedStatement existsPrep;
 
 
     private String incrementLinkQuery =
             "UPDATE " + Constants.DATABASE_NAME + "." + Constants.INDEX_TABLE_NAME +
                     " SET NumInlinks = NumInlinks + 1\n" +
-                    "WHERE 'Url' = ?";
+                    "WHERE Url = ?";
     private PreparedStatement incrementPrep;
 
 

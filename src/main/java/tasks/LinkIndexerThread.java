@@ -22,7 +22,7 @@ public class LinkIndexerThread extends Thread {
     //TODO refactor hardcoded column names
     private String existsInLinkDBQuery =
             "SELECT COUNT(*) FROM " + Constants.DATABASE_NAME + "." + Constants.LINK_TABLE_NAME +
-            " WHERE 'SourceURL' = ? AND 'TargetURL' = ?";
+            " WHERE SourceURL = ? AND TargetURL = ?";
 
     // TODO: 8/9/16 refactor hardcoded column names
     private String insertQuery =
