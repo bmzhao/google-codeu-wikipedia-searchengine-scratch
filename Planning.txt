@@ -60,7 +60,9 @@ Parser:
                     increment count for global idf counter hashmap
                     add word + count to doc_hashmap
         parses any <a> tags
-            check if tag starts with "/wiki", and if it does, sends to FetcherQueue
+            check if tag starts with "/wiki" and doesn't end with png, svg, jpg, gif, etc, and if it does, sends to FetcherQueue
+
+        store global hashmaps into table
 
         set POJO's numIncomingLinks to 0
         set POJO's list of top tf words and top idf words

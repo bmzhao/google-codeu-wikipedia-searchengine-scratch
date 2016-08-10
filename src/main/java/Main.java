@@ -1,6 +1,9 @@
 import models.Constants;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Created by brianzhao on 8/8/16.
@@ -28,7 +31,7 @@ public class Main {
             String url = "jdbc:mysql://192.168.99.100:3306/Crawl";
             conn = DriverManager.getConnection(url, "root", "root");
 
-            for (String createStatement: Constants.createTableStatements) {
+            for (String createStatement : Constants.createTableStatements) {
                 Statement st = conn.createStatement();
                 boolean result = st.execute(createStatement);
                 System.out.println(createStatement);
@@ -40,7 +43,7 @@ public class Main {
         } catch (Exception e) {
             System.err.println("Got an exception! ");
             System.err.println(e.getMessage());
-        }finally {
+        } finally {
             try {
                 if (conn != null) {
                     conn.close();
@@ -50,6 +53,4 @@ public class Main {
             }
         }
     }
-
-
 }
