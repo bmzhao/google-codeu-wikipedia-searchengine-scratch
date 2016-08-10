@@ -8,7 +8,7 @@ Fetcher -> Parser -> Indexer
     |
     |
     \/
-    Link Indexer
+    Link Indexer ---> IncomingLinkIncrementer
 
 
 Fetcher Responsibilities:
@@ -24,14 +24,19 @@ Link Indexer:
     Given a "Fetch" object, check source URL + targetURL combo already exists in Link db (maybe primary key?)
     if not
         add new entry into LinkDB
-        lookup associated targetURL in Indexing Table
-            if doesn't exist,
-                (spinwait) - case where parser hasn't parsed the new link and/or indexer hasn't indexed link
-            //now it exists in indexing table
-            increment incoming link count
-
+        send targetURL to be incremented to IncomingLinkIncrementer Thread
+        
     Table Schema:
        Source URL (String)  Target URL (String)    anchor Text(String)
+
+
+Incoming Link Incrementer:
+    lookup associated targetURL in Indexing Table
+        if doesn't exist,
+            reinsert at end of queue
+        else
+            increment incoming link count
+
 
 
 Parser:

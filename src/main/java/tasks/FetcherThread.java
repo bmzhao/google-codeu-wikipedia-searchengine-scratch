@@ -1,5 +1,6 @@
 package tasks;
 
+import models.Constants;
 import models.CustomDoc;
 import models.Fetch;
 import org.jsoup.Connection;
@@ -8,6 +9,9 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -21,15 +25,38 @@ public class FetcherThread extends Thread {
     private BlockingQueue<Fetch> fetchQueue;
     private BlockingQueue<Fetch> linkIndexingQueue;
     private BlockingQueue<CustomDoc> parseQueue;
+    private java.sql.Connection connection;
 
-    public FetcherThread(BlockingQueue<Fetch> fetchQueue, BlockingQueue<CustomDoc> parseQueue, BlockingQueue<Fetch> linkIndexingQueue) {
+    // TODO: 8/9/16 refactor hardcoded column name
+    private String existsInCrawlIndexQuery =
+            "SELECT COUNT(*) FROM " + Constants.DATABASE_NAME + "." + Constants.INDEX_TABLE_NAME +
+                    " WHERE 'Url' = ?";
+
+    private PreparedStatement existsPrep;
+
+    public FetcherThread(BlockingQueue<Fetch> fetchQueue,
+                         BlockingQueue<CustomDoc> parseQueue,
+                         BlockingQueue<Fetch> linkIndexingQueue,
+                         java.sql.Connection connection) {
         this.fetchQueue = fetchQueue;
         this.parseQueue = parseQueue;
         this.linkIndexingQueue = linkIndexingQueue;
+        this.connection = connection;
+        try {
+            this.existsPrep = connection.prepareStatement(existsInCrawlIndexQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 
-    private boolean alreadyIndexed(String URL) {
-        //TODO query index table for target url, if count(rows) > 1 return true
+    private boolean alreadyIndexed(String URL) throws SQLException {
+        this.existsPrep.setString(1, URL.toString());
+        ResultSet resultSet = this.existsPrep.executeQuery();
+        if (resultSet.next()) {
+            int count = resultSet.getInt(1);
+            return count > 0;
+        }
         return false;
     }
 
@@ -65,7 +92,7 @@ public class FetcherThread extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 break;
-            } catch (IOException e) {
+            } catch (IOException | SQLException e) {
                 e.printStackTrace();
             }
         }

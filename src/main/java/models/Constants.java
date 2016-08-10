@@ -27,7 +27,7 @@ public class Constants {
         INDEX_TYPE_MAP.put("Url", "VARCHAR(255) NOT NULL PRIMARY KEY");
         INDEX_TYPE_MAP.put("Title", "VARCHAR(255)");
         INDEX_TYPE_MAP.put("TopWords", "MEDIUMTEXT");
-        INDEX_TYPE_MAP.put("NumInlinks", "INT");
+        INDEX_TYPE_MAP.put("NumInlinks", "INT NOT NULL");
         INDEX_TYPE_MAP.put("Vector", "MEDIUMTEXT NOT NULL");
 
         Map<String, String> LINKS_TYPE_MAP = new HashMap<>();
@@ -40,6 +40,7 @@ public class Constants {
         WORDS_TYPE_MAP.put("Word", "VARCHAR(255) NOT NULL PRIMARY KEY");
         //num is the index of the high dimension sparse vector
         WORDS_TYPE_MAP.put("Num", "INT NOT NULL");
+        WORDS_TYPE_MAP.put("DocFreq", "INT");
 
         TABLE_TO_COLUMNS.put(INDEX_TABLE_NAME,
                 INDEX_TYPE_MAP);
