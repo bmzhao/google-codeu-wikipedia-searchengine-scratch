@@ -1,16 +1,18 @@
 package models;
 
+import java.net.URL;
 import java.util.List;
 
 /**
  * Created by brianzhao on 8/9/16.
  */
 public interface Indexable {
-    public String getSerializedSparseMap();
+    //ideally implemented as json of hashmap where keys are numbers corresponding to words
+    public String getVector();
 
-    public String getURL();
+    public URL getURL();
 
-    public List<String> getMostUsedTerms();
+    public List<String> getTopWords();
 
     public String getTitle();
 
